@@ -14,7 +14,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.view.View;
 import android.widget.*;
 
+import romain.com.todolist.db.TaskContract;
+import romain.com.todolist.db.TaskDBHelper;
+
 public class MainActivity extends ActionBarActivity {
+
+    private TaskDBHelper helper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +37,7 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.action_add_task:
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setTitle("Ajouter une tâche");
@@ -42,7 +47,17 @@ public class MainActivity extends ActionBarActivity {
                 builder.setPositiveButton("Ajouter", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        Log.d("MainActivity", inputField.getText().toString());
+                        String task = inputField.getText().toString();
+                        Log.d("MainActivity", task);
+
+                        TaskDBHelper helper = new TaskDBHelper(MainActivity.this);
+                        SQLiteDatabase db = helper.getWritableDatabase();
+                        ContentValues values = new ContentValues();
+
+                        values.clear();
+                        values.put(TaskContract.Columns.TASK, task);
+
+                        db.insertWithOnConflict(TaskContract.TABLE, null, values, SQLiteDatabase.CONFLICT_IGNORE);
                     }
                 });
 
@@ -50,8 +65,9 @@ public class MainActivity extends ActionBarActivity {
 
                 builder.create().show();
                 return true;
-        }
 
-        return false;
+            default:
+                return false;
+        }
     }
 }
