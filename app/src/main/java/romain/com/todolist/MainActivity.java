@@ -17,14 +17,16 @@ import android.widget.*;
 import romain.com.todolist.db.TaskContract;
 import romain.com.todolist.db.TaskDBHelper;
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ListActivity {
 
     private TaskDBHelper helper;
+    private ListAdapter listAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        updateUI();
     }
 
 
@@ -50,7 +52,7 @@ public class MainActivity extends ActionBarActivity {
                         String task = inputField.getText().toString();
                         Log.d("MainActivity", task);
 
-                        TaskDBHelper helper = new TaskDBHelper(MainActivity.this);
+                        helper = new TaskDBHelper(MainActivity.this);
                         SQLiteDatabase db = helper.getWritableDatabase();
                         ContentValues values = new ContentValues();
 
@@ -58,6 +60,7 @@ public class MainActivity extends ActionBarActivity {
                         values.put(TaskContract.Columns.TASK, task);
 
                         db.insertWithOnConflict(TaskContract.TABLE, null, values, SQLiteDatabase.CONFLICT_IGNORE);
+                        updateUI();
                     }
                 });
 
@@ -69,5 +72,23 @@ public class MainActivity extends ActionBarActivity {
             default:
                 return false;
         }
+    }
+
+    private void updateUI(){
+        helper = new TaskDBHelper(MainActivity.this);
+        SQLiteDatabase sqlDB = helper.getReadableDatabase();
+        Cursor cursor = sqlDB.query(TaskContract.TABLE,
+                new String[]{TaskContract.Columns._ID, TaskContract.Columns.TASK},
+                null,null,null,null,null);
+
+        listAdapter = new SimpleCursorAdapter(
+                this,
+                R.layout.task_view,
+                cursor,
+                new String[]{TaskContract.Columns.TASK},
+                new int[] {R.id.taskTextView},
+                0
+        );
+        this.setListAdapter(listAdapter);
     }
 }
