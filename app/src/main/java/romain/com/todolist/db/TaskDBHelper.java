@@ -10,7 +10,7 @@ import android.util.Log;
  */
 public class TaskDBHelper extends SQLiteOpenHelper {
 
-    public TaskDBHelper(Context context){
+    public TaskDBHelper(Context context) {
         super(context, TaskContract.DB_NAME, null, TaskContract.DB_VERSION);
     }
 
@@ -27,8 +27,8 @@ public class TaskDBHelper extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase sqlDB, int i, int i2){
-        sqlDB.execSQL("DROP TABLE IF EXISTS "+TaskContract.TABLE);
+    public void onUpgrade(SQLiteDatabase sqlDB, int i, int i2) {
+        sqlDB.execSQL("DROP TABLE IF EXISTS " + TaskContract.TABLE);
         onCreate(sqlDB);
     }
 }

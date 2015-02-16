@@ -17,7 +17,7 @@ import android.widget.*;
 import romain.com.todolist.db.TaskContract;
 import romain.com.todolist.db.TaskDBHelper;
 
-public class MainActivity extends ListActivity {
+public class MainActivity extends ActionBarActivity {
 
     private TaskDBHelper helper;
     private ListAdapter listAdapter;
@@ -74,21 +74,22 @@ public class MainActivity extends ListActivity {
         }
     }
 
-    private void updateUI(){
+    private void updateUI() {
         helper = new TaskDBHelper(MainActivity.this);
         SQLiteDatabase sqlDB = helper.getReadableDatabase();
         Cursor cursor = sqlDB.query(TaskContract.TABLE,
                 new String[]{TaskContract.Columns._ID, TaskContract.Columns.TASK},
-                null,null,null,null,null);
+                null, null, null, null, null);
 
         listAdapter = new SimpleCursorAdapter(
                 this,
                 R.layout.task_view,
                 cursor,
                 new String[]{TaskContract.Columns.TASK},
-                new int[] {R.id.taskTextView},
+                new int[]{R.id.taskTextView},
                 0
         );
-        this.setListAdapter(listAdapter);
+        ListView listView = (ListView) findViewById(R.id.list);
+        listView.setAdapter(listAdapter);
     }
 }

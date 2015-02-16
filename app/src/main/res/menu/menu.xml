@@ -6,7 +6,7 @@
         android:id="@+id/action_add_task"
         android:showAsAction="always"
         android:icon="@android:drawable/ic_menu_add"
-        android:title="Ajouter une tâche"
+        android:title="@string/tache"
     />
 
 </menu>
