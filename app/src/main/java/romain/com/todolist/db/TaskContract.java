@@ -14,6 +14,7 @@ public class TaskContract {
 
     public class Columns {
         public static final String TASK = "task";
+        public static final String IMPORTANCE = "importance";
         public static final String _ID = BaseColumns._ID;
     }
 }
